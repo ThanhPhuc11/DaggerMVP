@@ -1,6 +1,9 @@
 package com.example.daggermvp.di.module;
 
+import android.app.Application;
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.widget.LinearLayout;
 
 import com.example.daggermvp.adapter.MyAdapter;
 import com.example.daggermvp.interactor.IMainInteractor;
@@ -21,33 +24,41 @@ import dagger.Provides;
 
 @Module
 public class MyModule {
-    IMainActivity iMainActivity;
-    CallbackPresenter iMainPresenter;
+    private Context mContext;
 
-    public MyModule(IMainActivity iMainActivity) {
-        this.iMainActivity = iMainActivity;
-    }
-
-    public MyModule(CallbackPresenter iMainPresenter) {
-        this.iMainPresenter = iMainPresenter;
+    public MyModule(Context context) {
+        this.mContext = context;
     }
 
     @Provides
     @Singleton
-    IMainPresenter providePresenter() {
-        return new MainPresenter(iMainActivity);
+    IMainInteractor provideInteractor(MainInteractor mainInteractor) {
+        return mainInteractor;
     }
+
 
     @Provides
     @Singleton
-    IMainInteractor provideInteractor() {
-        return new MainInteractor(iMainPresenter);
+    IMainPresenter providePresenter(MainPresenter mainPresenter) {
+        return mainPresenter;
     }
 
     @Provides
     @Singleton
     List<Person> provideList() {
         return new ArrayList<Person>();
+    }
+
+    @Provides
+    @Singleton
+    MyAdapter provideAdapter(IMainPresenter presenter) {
+        return new MyAdapter(presenter.getmList());
+    }
+
+    @Provides
+    @Singleton
+    LinearLayoutManager provideLinearLayoutManager() {
+        return new LinearLayoutManager(mContext);
     }
 
 }

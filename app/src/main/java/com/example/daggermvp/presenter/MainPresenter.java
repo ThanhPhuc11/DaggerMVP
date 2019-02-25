@@ -1,9 +1,6 @@
 package com.example.daggermvp.presenter;
 
-import com.example.daggermvp.di.component.DaggerMyComponent;
-import com.example.daggermvp.di.module.MyModule;
 import com.example.daggermvp.interactor.IMainInteractor;
-import com.example.daggermvp.interactor.MainInteractor;
 import com.example.daggermvp.model.Person;
 import com.example.daggermvp.view.IMainActivity;
 
@@ -14,20 +11,23 @@ import javax.inject.Inject;
 
 public class MainPresenter implements IMainPresenter, CallbackPresenter {
     private IMainActivity iMainActivity;
+    private IMainInteractor interactor;
+    private List<Person> mList;
 
     @Inject
-    public IMainInteractor interactor;
-
-    @Inject
-    public List<Person> mList;
-
-    public MainPresenter(IMainActivity iMainActivity) {
-        this.iMainActivity = iMainActivity;
-        DaggerMyComponent.builder().myModule(new MyModule(this)).build().injectInteractor(this);
+    public MainPresenter(IMainInteractor interactor, List<Person> list) {
+        this.interactor = interactor;
+        this.mList = list;
+        interactor.onAttach(this);
     }
 
     public List<Person> getmList() {
         return mList;
+    }
+
+    @Override
+    public void onAttach(IMainActivity iMainActivity) {
+        this.iMainActivity = iMainActivity;
     }
 
     @Override

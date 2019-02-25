@@ -16,17 +16,15 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List mList;
-    private Context mContext;
 
-    public MyAdapter(List mList, Context mContext) {
+    public MyAdapter(List mList) {
         this.mList = mList;
-        this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
         return new MyViewHolder(view);
     }
 

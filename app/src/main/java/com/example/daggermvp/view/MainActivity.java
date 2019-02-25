@@ -15,29 +15,34 @@ import com.example.daggermvp.di.module.MyModule;
 import com.example.daggermvp.presenter.IMainPresenter;
 
 
-
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements IMainActivity {
     private RecyclerView rv;
     private EditText edtName;
     private EditText edtAge;
-    private MyAdapter adapter;
     @Inject
-    public IMainPresenter presenter;
+    IMainPresenter presenter;
+    @Inject
+    MyAdapter adapter;
+    @Inject
+    LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        DaggerMyComponent.builder().myModule(new MyModule(this)).build().injectPresenter(this);
+        DaggerMyComponent
+                .builder()
+                .myModule(new MyModule(this))
+                .build()
+                .injectPresenter(this);
         initData();
+        presenter.onAttach(this);
     }
 
     private void initData() {
-        adapter = new MyAdapter(presenter.getmList(), this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(adapter);
